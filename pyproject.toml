@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "social-radar"
+version = "0.1.0"
+description = "Get alerted when a topic, person or company is mentioned on social media, with Claude filtering out the noise."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Pavan Pusuluri" }]
+keywords = ["social listening", "brand monitoring", "alerts", "linkedin", "reddit", "bluesky", "claude", "agents"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Topic :: Internet",
+]
+dependencies = [
+  "httpx>=0.27",
+  "pyyaml>=6.0",
+  "feedparser>=6.0",
+  "anthropic>=0.40",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "respx>=0.21", "ruff>=0.6"]
+
+[project.scripts]
+social-radar = "social_radar.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/social_radar"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "I", "UP"]

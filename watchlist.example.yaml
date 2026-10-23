@@ -1,0 +1,83 @@
+# social-radar watchlist
+# Copy to watchlist.yaml and edit. ${VAR} values are read from the environment / .env,
+# so this file is safe to commit as long as secrets stay in .env or CI secrets.
+
+lookback_hours: 24          # how far back each run looks (match your schedule, with overlap)
+db_path: radar.db           # remembers what you've already been alerted about
+
+watches:
+  # A company. `context` is what lets Claude reject namesakes and noise.
+  - name: Anthropic
+    type: company
+    terms: ["Anthropic", "Claude AI", "Claude Code"]
+    context: "The AI safety company Anthropic and its Claude models and products."
+    exclude: ["Claude Monet", "anthropic principle"]
+    min_relevance: 0.6
+
+  # A person. Use the full name plus any handle people use.
+  - name: Andrej Karpathy
+    type: person
+    terms: ["Andrej Karpathy", "Karpathy"]
+    context: "The AI researcher and educator."
+    sources: [hackernews, reddit, bluesky, rss, web]
+
+  # A topic, scoped to the subreddits and hashtags that matter.
+  - name: Bedrock AgentCore
+    type: topic
+    terms: ["AgentCore", "Bedrock Agents", "Bedrock AgentCore"]
+    context: "Amazon Bedrock's agent-building services on AWS."
+    subreddits: [aws, MachineLearning, LocalLLaMA]
+    hashtags: [AgentCore, AmazonBedrock]
+    min_relevance: 0.5
+
+sources:
+  hackernews: {}                       # free, no key
+  reddit:                              # works without keys; app keys avoid rate limits
+    client_id: ${REDDIT_CLIENT_ID}
+    client_secret: ${REDDIT_CLIENT_SECRET}
+  bluesky:
+    handle: ${BLUESKY_HANDLE}
+    app_password: ${BLUESKY_APP_PASSWORD}
+  mastodon:
+    instance: https://mastodon.social
+    access_token: ${MASTODON_TOKEN}    # optional; hashtags work without it
+  web:                                 # public LinkedIn posts/articles via Brave Search
+    brave_api_key: ${BRAVE_API_KEY}
+    sites: [linkedin.com/posts, linkedin.com/pulse]
+    freshness: pd                      # pd = past day, pw = past week
+  x:
+    bearer_token: ${X_BEARER_TOKEN}    # paid X API; skipped when empty
+  rss:
+    feeds: []   # remove [] and uncomment entries below
+      # Google Alerts → create alert → "Deliver to: RSS feed" → paste URL.
+      # `watch:` pins a feed to one watch (skips the keyword check).
+      # - url: https://www.google.com/alerts/feeds/XXXX/YYYY
+      #   watch: Anthropic
+      #   label: google-alerts
+      # - https://hnrss.org/newest?q=Anthropic   # plain URLs work too
+
+classifier:
+  enabled: true
+  model: claude-haiku-5-5
+  batch_size: 20
+
+notify:
+  mode: digest                # digest = one message per run, instant = one per mention
+  max_alerts_per_run: 25
+  channels: [console, ntfy]   # any of: console, slack, discord, telegram, ntfy, email
+  ntfy:
+    topic: ${NTFY_TOPIC}      # pick a hard-to-guess topic; install the ntfy app and subscribe
+  slack:
+    webhook_url: ${SLACK_WEBHOOK_URL}
+  discord:
+    webhook_url: ${DISCORD_WEBHOOK_URL}
+  telegram:
+    bot_token: ${TELEGRAM_BOT_TOKEN}
+    chat_id: ${TELEGRAM_CHAT_ID}
+  email:
+    smtp_host: ${SMTP_HOST}
+    smtp_port: 587
+    username: ${SMTP_USER}
+    password: ${SMTP_PASSWORD}
+    from: ${ALERT_FROM}
+    to: ${ALERT_TO}
