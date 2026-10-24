@@ -32,10 +32,7 @@ sources:
   x:
     bearer_token: ${X_BEARER_TOKEN}
   rss:
-    feeds:
-      - url: https://hnrss.org/newest?q=ontology
-        label: hnrss
-        watch: Ontology
+    feeds: []   # add Google Alerts RSS feeds here, e.g. for site:linkedin.com "ontology"
 
 classifier:
   enabled: true

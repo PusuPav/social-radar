@@ -116,10 +116,12 @@ def test_failed_delivery_is_retried_next_run(tmp_path):
 def test_hackernews_collector_parses_hits():
     respx.get("https://hn.algolia.com/api/v1/search_by_date").mock(return_value=httpx.Response(200, json={
         "hits": [{"objectID": "42", "title": "Acme Corp launches", "author": "pg",
+                  "comment_text": "It&#x27;s <p>great</p>",
                   "created_at_i": int(utcnow().timestamp())}]}))
     w = Watch(name="Acme", terms=["Acme Corp"])
     out = HackerNewsCollector().collect(w, utcnow() - timedelta(hours=1))
     assert out[0].url == "https://news.ycombinator.com/item?id=42" and out[0].author == "pg"
+    assert out[0].text == "It's  great"
 
 
 @respx.mock

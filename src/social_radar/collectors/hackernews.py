@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from ..config import Watch
 from ..models import Mention
 from .base import Collector
+from .util import strip_html
 
 
 class HackerNewsCollector(Collector):
@@ -28,8 +29,8 @@ class HackerNewsCollector(Collector):
                 source=self.name,
                 native_id=oid,
                 url=f"https://news.ycombinator.com/item?id={oid}",
-                title=h.get("title") or h.get("story_title") or "",
-                text=h.get("comment_text") or h.get("story_text") or h.get("url") or "",
+                title=strip_html(h.get("title") or h.get("story_title")),
+                text=strip_html(h.get("comment_text") or h.get("story_text") or h.get("url")),
                 author=h.get("author", ""),
                 published=datetime.fromtimestamp(h["created_at_i"], tz=timezone.utc),
             ))
