@@ -1,0 +1,49 @@
+# Pavan's live watchlist. Secrets come from GitHub Actions secrets / .env via ${VARS}.
+lookback_hours: 72
+
+watches:
+  - name: Ontology
+    type: topic
+    terms: ["ontology", "ontologies", "ontology engineering", "semantic layer", "knowledge graph"]
+    context: >
+      Ontologies in data, AI and enterprise architecture: knowledge graphs, semantic layers,
+      OWL/RDF/SHACL, ontology engineering, ontologies that ground LLMs, RAG or AI agents,
+      Palantir Foundry Ontology, data products and master data. NOT philosophical or
+      religious ontology, and not "ontology" used loosely in self-help or politics.
+    exclude: ["ontological argument", "object-oriented ontology"]
+    hashtags: [Ontology, KnowledgeGraph, SemanticWeb]
+    min_relevance: 0.6
+
+sources:
+  hackernews: {}
+  reddit:
+    client_id: ${REDDIT_CLIENT_ID}
+    client_secret: ${REDDIT_CLIENT_SECRET}
+  bluesky:
+    handle: ${BLUESKY_HANDLE}
+    app_password: ${BLUESKY_APP_PASSWORD}
+  mastodon:
+    instance: https://mastodon.social
+    access_token: ${MASTODON_TOKEN}
+  web:
+    brave_api_key: ${BRAVE_API_KEY}
+    sites: [linkedin.com/posts, linkedin.com/pulse]
+    freshness: pw
+  x:
+    bearer_token: ${X_BEARER_TOKEN}
+  rss:
+    feeds:
+      - url: https://hnrss.org/newest?q=ontology
+        label: hnrss
+        watch: Ontology
+
+classifier:
+  enabled: true
+  model: claude-haiku-5-5
+
+notify:
+  mode: digest
+  max_alerts_per_run: 25
+  channels: [console, ntfy]
+  ntfy:
+    topic: ${NTFY_TOPIC}

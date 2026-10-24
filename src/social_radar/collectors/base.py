@@ -11,7 +11,7 @@ from ..config import Watch
 from ..models import Mention
 
 log = logging.getLogger(__name__)
-USER_AGENT = "social-radar/0.1 (+https://github.com/your-org/social-radar)"
+USER_AGENT = "social-radar/0.1 (+https://github.com/PusuPav/social-radar)"
 
 
 class Collector(ABC):

@@ -5,7 +5,12 @@ name: social-radar
 on:
   schedule:
     - cron: "17 * * * *"   # hourly, off the top of the hour
-  workflow_dispatch: {}     # "Run workflow" button for manual runs
+  workflow_dispatch:        # "Run workflow" button for manual runs
+    inputs:
+      dry_run:
+        description: "Dry run: print matches in the log, send nothing, save nothing"
+        type: boolean
+        default: true
 
 concurrency:
   group: social-radar
@@ -24,13 +29,16 @@ jobs:
 
       # The SQLite file remembers what you've been alerted about between runs.
       - uses: actions/cache@v4
+        if: ${{ !inputs.dry_run }}
         with:
           path: radar.db
           key: radar-db-${{ github.run_id }}
           restore-keys: radar-db-
 
       - name: Run
-        run: social-radar -c ${{ vars.WATCHLIST || 'watchlist.yaml' }} run
+        run: |
+          social-radar -c "${{ vars.WATCHLIST || 'watchlist.yaml' }}" validate
+          social-radar -c "${{ vars.WATCHLIST || 'watchlist.yaml' }}" run ${{ inputs.dry_run && '--dry-run' || '' }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}

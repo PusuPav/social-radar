@@ -60,7 +60,7 @@ Coverage is partial and lags by however long indexing takes. For mentions of *yo
 ## Quick start (local)
 
 ```bash
-git clone https://github.com/<you>/social-radar && cd social-radar
+git clone https://github.com/PusuPav/social-radar && cd social-radar
 python -m venv .venv && source .venv/bin/activate
 pip install -e .
 
