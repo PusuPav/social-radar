@@ -136,3 +136,8 @@ def test_rss_collector_and_google_unwrap():
     assert out[0].url == "https://www.linkedin.com/posts/abc"
     assert out[0].matched_terms == ["feed:ga"]
     assert _unwrap_google("https://example.com") == "https://example.com"
+
+
+def test_rss_skips_feeds_with_unset_env():
+    assert not RSSCollector({"feeds": [{"url": ""}, ""]}).enabled()
+    assert RSSCollector({"feeds": ["https://x/feed"]}).enabled()

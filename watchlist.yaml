@@ -32,7 +32,12 @@ sources:
   x:
     bearer_token: ${X_BEARER_TOKEN}
   rss:
-    feeds: []   # add Google Alerts RSS feeds here, e.g. for site:linkedin.com "ontology"
+    feeds:
+      # Google Alert: site:linkedin.com ontology OR "knowledge graph" OR "semantic layer" OR "ontology engineering"
+      # The feed URL is kept in the LINKEDIN_ALERT_FEED secret so it isn't public.
+      - url: ${LINKEDIN_ALERT_FEED}
+        label: linkedin
+        watch: Ontology
 
 classifier:
   enabled: true

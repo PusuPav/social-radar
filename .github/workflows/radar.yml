@@ -47,6 +47,7 @@ jobs:
           BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
           MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
           BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
+          LINKEDIN_ALERT_FEED: ${{ secrets.LINKEDIN_ALERT_FEED }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
